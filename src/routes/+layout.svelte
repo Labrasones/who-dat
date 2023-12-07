@@ -28,6 +28,7 @@
     import { writable, type Writable } from 'svelte/store';
     import Modal, { pushModal } from './components/modal/Modal.svelte';
     import TimedModal from './components/modal/TimedModal.svelte';
+    import { base } from '$app/paths';
 
     const splash_time: number  = 3000;
     let show_splash: boolean = false;
@@ -63,21 +64,21 @@
 <!-- Splash Page -->
 {#if show_splash}
     <div class="splash" in:fly={{ duration: 1000, y: 1000, easing: backOut, opacity: 0 }} out:fade={{ duration: 250 }}>
-        <img src="/logo.png" alt="splash"/>
+        <img src="{base}/logo.png" alt="splash"/>
     </div>
 {:else}
     <div class="container" in:fade={{ duration: 250 }}>
         <header>
-            <a href="/"><img src="/logo.png" alt="Who Dat Logo" /></a>
+            <a href="{base}"><img src="{base}/logo.png" alt="Who Dat Logo" /></a>
             <span class='logo-theme'>{$page_title ?? ""}</span>
         </header>
         <page><slot /></page>
         <nav>
-            <a href="/editor">
+            <a href="{base}/editor">
                 <IconMdiChessPawn />
                 <span>Manage</span>
             </a>
-            <a href="/game" class='newgame'>
+            <a href="{base}/game" class='newgame'>
                 <IconSolarGamepadBold />
                 <span>New game</span>
             </a>

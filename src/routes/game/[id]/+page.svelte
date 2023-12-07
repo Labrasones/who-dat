@@ -10,6 +10,7 @@
     import { slide } from "svelte/transition";
     import { pushModal } from "../../components/modal/Modal.svelte";
     import YesNoModal from "../../components/modal/YesNoModal.svelte";
+    import { base } from "$app/paths";
 
     export let data: PageData;
     $: playset_id = data.playset_id;
@@ -53,7 +54,7 @@
         <span>Download Playset</span>
     </button>
     <header>Your Character Is:</header>
-    <img src={my_character?.img_blob ?? "/logo.png"} alt="My Character" />
+    <img src={my_character?.img_blob ?? `${base}/logo.png`} alt="My Character" />
     {#if my_character?.name !== undefined}<span>{my_character.name}</span>{/if}
 </div>
 <ul class="characters">
@@ -67,7 +68,7 @@
                 {#if character.name !== undefined}<span>{character.name}</span>{/if}
             </div>
             <div class="back">
-                <img src="/logo.png" />
+                <img src="{base}/logo.png" />
             </div>
         </li>
     {/each}

@@ -86,7 +86,7 @@
 <div class="metadata">
     <label for='playset-image'>
         <IconSolarPenBold class="icon"/>
-        <img src={$playset.img_blob ?? "/logo.png"} alt="Playset Icon" />
+        <img src={$playset.img_blob ?? `${base}/logo.png`} alt="Playset Icon" />
     </label>
     <input id='playset-image' type="file" bind:files={playset_image_file} accept="image/*" on:change={onChangePlaysetImage}/>
     <input type="text" bind:value={$playset.title} placeholder="Playset Title" />

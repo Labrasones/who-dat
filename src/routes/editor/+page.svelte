@@ -6,6 +6,7 @@
     import { backOut } from "svelte/easing";
     import { fly } from "svelte/transition";
     import { goto } from "$app/navigation";
+    import { base } from "$app/paths";
 
     // Internal
     let playsets = liveQuery(async () => {
@@ -24,7 +25,7 @@
     async function onAddPlayset()
     {
         const idx = await db.playsets.add({} as Playset);
-        goto( `/editor/${idx}` );
+        goto( `${base}/editor/${idx}` );
     }
 </script>
 
@@ -37,14 +38,14 @@
         </button>
         {#each $playsets ?? [] as playset, idx}
             {@const character_count = playset.characters?.length ?? 0}
-            <a href="/editor/{playset.id}" transition:fly={{ duration: 1000, y: 50, easing: backOut }}>
+            <a href="{base}/editor/{playset.id}" transition:fly={{ duration: 1000, y: 50, easing: backOut }}>
                 {#if character_count < 24}
                     <span class="warning">
                         <IconSolarShieldWarningBold />
                         <small>{character_count}/24 chacacter{character_count !== 1 ? "s" : ""}!</small>
                     </span>
                 {/if}
-                <img src={playset.img_blob ?? "/logo.png"} alt="Playset icon" />
+                <img src={playset.img_blob ?? `${base}/logo.png`} alt="Playset icon" />
                 <span>{playset.title}</span>
             </a>
         {/each}

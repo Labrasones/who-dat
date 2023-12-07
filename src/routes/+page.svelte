@@ -1,4 +1,5 @@
 <script lang='ts'>
+    import { base } from "$app/paths";
     import { LocalStorageStore, db, type Playset, recent_playset_ids } from "$lib/db";
     import { liveQuery } from "dexie";
     import { backOut, elasticOut } from "svelte/easing";
@@ -13,7 +14,7 @@
     <header>Jump back in</header>
     <section>
         {#each $recents ?? [] as recent, idx}
-            <a href="/game/{recent.id}" transition:fly={{ duration: 1000, y: 50, easing: backOut }}>
+            <a href="{base}/game/{recent.id}" transition:fly={{ duration: 1000, y: 50, easing: backOut }}>
                 <img src={recent.img_blob} alt="Playset icon" />
                 <span>{recent.title}</span>
             </a>

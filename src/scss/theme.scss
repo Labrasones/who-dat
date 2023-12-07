@@ -1,0 +1,9 @@
+@use 'color';
+@forward 'color';
+
+$light:    color.$white;
+$dark:     color.$black;
+
+$accent_1: color.$guess_blue;
+$accent_2: color.$guess_red;
+$accent_3: color.$guess_yellow;

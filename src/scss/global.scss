@@ -1,0 +1,35 @@
+@use 'theme';
+@use 'sass:color';
+@forward 'theme';
+
+body {
+    background-color: color.scale( theme.$accent_1, $lightness: -50% );
+    color:            theme.$light;
+
+    padding: 0;
+    margin:  0;
+}
+
+body * {
+    box-sizing: border-box;
+    font-family: 'Concert One';
+}
+
+a {
+    color: theme.$light;
+}
+
+.logo-theme {
+    font-family: 'Paytone One';
+    color:       theme.$accent_2; // Red text
+    text-shadow: // White outline
+         2px -1px 1px theme.$light,
+        -2px  1px 1px theme.$light,
+        -1px  2px 1px theme.$light,
+         1px -2px 1px theme.$light,
+         2px  1px 1px theme.$light,
+        -2px -1px 1px theme.$light,
+         1px  2px 1px theme.$light,
+        -1px -2px 1px theme.$light
+    ;
+}

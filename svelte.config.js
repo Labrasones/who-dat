@@ -16,7 +16,8 @@ const config = {
 		// See https://kit.svelte.dev/docs/adapters for more information about adapters.
 		adapter: adapter({
 			pages: "docs",
-			assets: "docs"
+			assets: "docs",
+			fallback: "index.html"
 		}),
 		paths: {
 			base: dev ? '' : '/who-dat'

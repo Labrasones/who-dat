@@ -10,6 +10,7 @@
     import { slide } from "svelte/transition";
     import { pushModal } from "../../components/modal/Modal.svelte";
     import YesNoModal from "../../components/modal/YesNoModal.svelte";
+    import { base } from "$app/paths";
 
     export let data: PageData;
     $: playset    = data.playset;

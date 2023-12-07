@@ -94,7 +94,7 @@
     <button class="trash" on:click={onDelete}>
         <IconSolarTrashBin2Bold />
     </button>
-    <a href="/editor" class="save">
+    <a href="{base}/editor" class="save">
         <IconSolarDisketteBold />
         <span>Save</span>
     </a>

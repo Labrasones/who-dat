@@ -73,7 +73,7 @@
         if( result )
         {
             db.playsets.delete( $playset.id );
-            goto('/editor')
+            goto( `${base}/editor` )
         }
     }
 

@@ -78,7 +78,7 @@
                 <IconMdiChessPawn />
                 <span>Manage</span>
             </a>
-            <a href="{base}/game" class='newgame'>
+            <a href="{base}/" class='newgame'>
                 <IconSolarGamepadBold />
                 <span>New game</span>
             </a>

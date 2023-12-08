@@ -9,6 +9,8 @@ declare global {
   const IconMdiChessPawn: typeof import('~icons/mdi/chess-pawn.svelte')['default']
   const IconSolarAddSquareBold: typeof import('~icons/solar/add-square-bold.svelte')['default']
   const IconSolarAddSquareLinear: typeof import('~icons/solar/add-square-linear.svelte')['default']
+  const IconSolarCheckCircleBold: typeof import('~icons/solar/check-circle-bold.svelte')['default']
+  const IconSolarCloseCircleBold: typeof import('~icons/solar/close-circle-bold.svelte')['default']
   const IconSolarDisketteBold: typeof import('~icons/solar/diskette-bold.svelte')['default']
   const IconSolarDownloadBold: typeof import('~icons/solar/download-bold.svelte')['default']
   const IconSolarDownloadSquareBold: typeof import('~icons/solar/download-square-bold.svelte')['default']

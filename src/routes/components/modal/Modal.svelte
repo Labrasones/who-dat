@@ -76,19 +76,19 @@
         backdrop-filter: blur( 1.5px );
 
         span {
-            display:        flex;
-            flex-direction: column;
-            align-items:    stretch;
+            display:  block;
+            position: relative;
 
-            border-radius: 1.5em;
+            margin:   25px;
             overflow: hidden;
 
-            $offset: 2em;
-            $spread: 8em;
+            background: theme.$accent_1;
+            border: solid 5px theme.$accent_2;
+            border-radius: 1.5em;
+
             box-shadow:
-                (-$offset) (-$offset) $spread rgba( theme.$accent_1, 0.25 ),
-                  $offset    $offset  $spread rgba( theme.$accent_2, 0.25 ),
-                0 0 0.5em 0.1em rgba( black, 0.75 )
+                0 0 0 2px theme.$light,
+                0 0 0 8px theme.$accent_1,
             ;
 
             & :global( > * ) {

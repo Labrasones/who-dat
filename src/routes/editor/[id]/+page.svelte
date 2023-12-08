@@ -11,6 +11,7 @@
     import { pushModal } from "../../components/modal/Modal.svelte";
     import YesNoModal from "../../components/modal/YesNoModal.svelte";
     import { base } from "$app/paths";
+    import CropImageModal from "../../components/modal/CropImageModal.svelte";
 
     export let data: PageData;
     $: playset    = data.playset;
@@ -46,7 +47,8 @@
             $playset.img_blob = optimized_uri;
         }
     }
-    async function onChangeCharacterImages()
+
+    async function onAddCharacterImages()
     {
         if( character_image_files.length > 0 )
         {
@@ -82,6 +84,15 @@
         download_playset( $playset );
     }
 
+    async function onEditImageFor( character: Character )
+    {
+        const new_img_uri = await pushModal( CropImageModal, { cur_img_uri: character.img_blob ?? `${base}/logo.png` });
+        if( new_img_uri === false ) return; // User cancelled the modal
+        
+        character.img_blob = new_img_uri;
+        playset.set( $playset );
+    }
+
 </script>
 
 <div class="metadata">
@@ -110,7 +121,7 @@
         <IconSolarUploadSquareBold />
         <span>Add Images</span>
     </label>
-    <input id="character-images" type='file' bind:files={character_image_files} multiple accept="image/*" on:change={onChangeCharacterImages} />
+    <input id="character-images" type='file' bind:files={character_image_files} multiple accept="image/*" on:change={onAddCharacterImages} />
     <span>
         {characters_needed} more character{characters_needed !== 1 ? "s" : ""} needed!
     </span>
@@ -121,11 +132,20 @@
     <li class="character">
         <img src={character.img_blob} alt="Character" />
         <input type="text" bind:value={character.name} on:change={()=>{ playset.set( $playset ) }}/>
-        <button on:click={()=>{
-            $playset.characters.splice( i, 1 );
-            playset.set( $playset );
-        }}>
+        <button
+            class='trash'
+            on:click={()=>{
+                $playset.characters.splice( i, 1 );
+                playset.set( $playset );
+            }}
+        >
             <IconSolarTrashBin2Bold />
+        </button>
+        <button
+            class="edit"
+            on:click={()=>onEditImageFor( character )}
+        >
+            <IconSolarPenBold />
         </button>
     </li>
     {/each}
@@ -188,9 +208,6 @@
                 position: absolute;
                 z-index: 1;
 
-                top:   5px;
-                right: 5px;
-
                 padding: 4px;
                 font-size: 1.2rem;
 
@@ -204,12 +221,15 @@
                     stroke: theme.$light;
                     stroke-width: 1px;
                 }
-                // filter:
-                //     drop-shadow(  2px  0px 0 theme.$accent_1 )
-                //     drop-shadow( -2px  0px 0 theme.$accent_1 )
-                //     drop-shadow(  0px  2px 0 theme.$accent_1 )
-                //     drop-shadow(  0px -2px 0 theme.$accent_1 )
-                // ;
+
+                &.trash {
+                    top:   5px;
+                    right: 5px;
+                }
+                &.edit {
+                    top: 5px;
+                    left: 5px;
+                }
             }
         }
     }

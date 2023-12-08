@@ -26,6 +26,30 @@ function getOptimizedDataUri( original_uri: string, cb: ( uri: string ) => void 
     img.src = original_uri;
 }
 
+
+export function fileToUri( file: File ): Promise<string>
+{
+    return new Promise<string>( ( res, rej ) => {
+        const reader = new FileReader();
+        reader.onerror = rej;
+        reader.onload = () => {
+            const result = reader.result;
+            if ( result === null ) {
+                rej( `File reader had null result` );
+            }
+            else if ( typeof result !== 'string' )
+            {
+                rej( `File reader result was not a string` );
+            }
+            else
+            {
+                res( result );
+            }
+        }
+        reader.readAsDataURL( file );
+    })
+}
+
 export function convert_files( files: FileList ): Promise< string[] >
 {
     let promises: Promise<string>[] = [];

@@ -1,25 +1,38 @@
 <script lang='ts'>
     import { db, type Character, type Playset, pushRecentPlayset } from "$lib/db";
     import { liveQuery } from "dexie";
-    import { writable, type Writable } from "svelte/store";
+    import { writable } from "svelte/store";
     import type { PageData } from "./$types";
-    import { convert_files, download_playset } from "$lib/helpers";
-    import { goto } from "$app/navigation";
+    import { download_playset } from "$lib/helpers";
     import { onDestroy, onMount } from "svelte";
-    import { page_title, popTitle, pushTitle } from "../../+layout.svelte";
-    import { slide } from "svelte/transition";
-    import { pushModal } from "../../components/modal/Modal.svelte";
-    import YesNoModal from "../../components/modal/YesNoModal.svelte";
+    import { popTitle, pushTitle } from "../../+layout.svelte";
     import { base } from "$app/paths";
 
     export let data: PageData;
     $: playset_id = data.playset_id;
     $: playset    = liveQuery(() => db.playsets.get( playset_id ));
-    $: characters = $playset?.characters ?? [];
+    $: characters = writable<Character[]>( [] );
     $: {
         if ( playset_id !== undefined )
         {
             pushRecentPlayset( playset_id );
+        }
+    }
+    $: {
+        if( $playset?.characters !== undefined )
+        { // #10 - Add characters to the screen randomly
+            const clone = $playset.characters.slice();
+            characters.update( chars => {
+
+                let char: Character | undefined;
+                while( ( char = clone.pop() ) !== undefined )
+                {
+                    const tar_idx = Math.floor( Math.random() * chars.length ); // Random position in the target array
+                    chars.splice( tar_idx, 0, char );
+                }
+                
+                return chars;
+            })
         }
     }
     let my_character: Character;
@@ -58,7 +71,7 @@
     {#if my_character?.name !== undefined}<span>{my_character.name}</span>{/if}
 </div>
 <ul class="characters">
-    {#each characters ?? [] as character, i}
+    {#each $characters as character, i}
         <!-- svelte-ignore a11y-click-events-have-key-events -->
         <!-- svelte-ignore a11y-missing-attribute -->
         <!-- svelte-ignore a11y-no-noninteractive-element-interactions -->

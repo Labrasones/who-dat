@@ -6,9 +6,6 @@ export interface Playset {
     title: string;
 
     /** Playset icon data */
-    icon?: CachedImageRef;
-
-    /** Characters included in this playset */
-    character_ids: CharacterRef[];
+    icon_ref?: CachedImageRef;
 }
 export type PlaysetRef = Playset['title'];

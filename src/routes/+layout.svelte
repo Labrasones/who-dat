@@ -30,6 +30,7 @@
     import TimedModal from './components/modal/TimedModal.svelte';
     import { base } from '$app/paths';
     import type { Playset } from '$lib/database/objects/Playset';
+    import { importSerializedPlayset, parsePlaysetFromBlob } from '$lib/io/playset_io';
 
     const splash_time: number  = 3000;
     let show_splash: boolean = false;
@@ -45,6 +46,14 @@
 
     async function onImportPlaysets()
     {
+        if( import_files?.length < 1 ) return;
+        const set_data = await parsePlaysetFromBlob( import_files[0] );
+        const set      = await importSerializedPlayset( set_data );
+
+        pushModal( TimedModal, { message: `Imported ${set.title}!` } )
+        return;
+        
+
         if( import_files?.length < 1 ) return;
         const playset = await new Promise<Playset>( res => {
             const reader = new FileReader();
@@ -73,7 +82,7 @@
             <a href="{base}"><img src="{base}/logo.png" alt="Who Dat Logo" /></a>
             <span class='logo-theme'>{$page_title ?? ""}</span>
         </header>
-        <page><slot /></page>
+        <!-- <page><slot /></page> -->
         <nav>
             <a href="{base}/editor">
                 <IconMdiChessPawn />

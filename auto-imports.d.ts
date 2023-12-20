@@ -18,6 +18,7 @@ declare global {
   const IconSolarMagniferLinear: typeof import('~icons/solar/magnifer-linear.svelte')['default']
   const IconSolarMagnifierLinear: typeof import('~icons/solar/magnifier-linear.svelte')['default']
   const IconSolarPenBold: typeof import('~icons/solar/pen-bold.svelte')['default']
+  const IconSolarShareBold: typeof import('~icons/solar/share-bold.svelte')['default']
   const IconSolarShieldWarningBold: typeof import('~icons/solar/shield-warning-bold.svelte')['default']
   const IconSolarTrashBin: typeof import('~icons/solar/trash-bin.svelte')['default']
   const IconSolarTrashBin2Bold: typeof import('~icons/solar/trash-bin2-bold.svelte')['default']

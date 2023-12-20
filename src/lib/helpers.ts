@@ -1,4 +1,5 @@
 import { browser } from "$app/environment";
+import type { dv1_Playset } from "./database/deprecated_objects/1/dv1_Playset";
 import type { Playset } from "./database/objects/Playset";
 
 
@@ -96,26 +97,4 @@ export function convert_files( files: FileList ): Promise< string[] >
     }
 
     return Promise.all( promises );
-}
-
-export function download_playset( playset: Playset )
-{
-    // Construct the JSON string for the required data
-    const set = Object.assign( {}, playset );
-    const as_json = JSON.stringify( set );
-
-    // Create a downloadable blob for the object
-    const blob = new Blob([as_json], { type: 'application/json' });
-    const url  = URL.createObjectURL( blob );
-
-    // Create and trigger the download via an HREF
-    const a = document.createElement( 'a' );
-    a.href     = url;
-    a.download = `[WhoDatPack] ${ set.title }.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-
-    // Release the URL
-    URL.revokeObjectURL( url );
 }

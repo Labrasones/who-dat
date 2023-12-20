@@ -13,12 +13,14 @@
     import { base } from "$app/paths";
     import CropImageModal from "../../components/modal/CropImageModal.svelte";
     import type { dv1_Character } from "$lib/database/deprecated_objects/1/dv1_Playset";
+    import CachedImage from "../../components/elements/CachedImage.svelte";
 
     export let data: PageData;
-    $: playset    = data.playset;
+    $: playset = data.set;
 
     // Dynamic
-    $: character_count = $playset.character_ids?.length ?? 0;
+    $: character_count = $playset?.character_refs?.length ?? 0;
+    $: set_icon = liveQuery( () => db.images.get( $playset?.icon_ref ) );
 
     // Internal
     let playset_image_file:    FileList;
@@ -38,53 +40,53 @@
         if ( playset_image_file.length > 0 )
         {
             const optimized_uri = ( await convert_files( playset_image_file ) )[0];
-            $playset.img_blob = optimized_uri;
+            //$playset?.icon = optimized_uri;
         }
     }
 
     async function onAddCharacterImages()
     {
-        if( character_image_files.length > 0 )
-        {
-            if( $playset.characters === undefined ) {
-                $playset.characters = [];
-            }
-            const optimized_uris = await convert_files( character_image_files );
-            for( const uri of optimized_uris )
-            {
-                if( ($playset.characters?.length ?? 0) >= 24 ) break; // Insert up to 24 max
-                playset.update( p => {
-                    p.characters.push({
-                        img_blob: uri
-                    });
-                    return p;
-                })
-            }
-        }
+        // if( character_image_files.length > 0 )
+        // {
+        //     if( $playset.characters === undefined ) {
+        //         $playset.characters = [];
+        //     }
+        //     const optimized_uris = await convert_files( character_image_files );
+        //     for( const uri of optimized_uris )
+        //     {
+        //         if( ($playset.characters?.length ?? 0) >= 24 ) break; // Insert up to 24 max
+        //         playset.update( p => {
+        //             p.characters.push({
+        //                 img_blob: uri
+        //             });
+        //             return p;
+        //         })
+        //     }
+        // }
     }
 
     async function onDelete()
     {
-        const result = await pushModal( YesNoModal, { title: `Delete "${$playset.title}"?`, message: `Are you sure you want to delete the "${$playset.title}" playset?` } );
-        if( result )
-        {
-            db.sets.delete( $playset.title );
-            goto( `${base}/editor` )
-        }
+        // const result = await pushModal( YesNoModal, { title: `Delete "${$playset.title}"?`, message: `Are you sure you want to delete the "${$playset.title}" playset?` } );
+        // if( result )
+        // {
+        //     db.sets.delete( $playset.title );
+        //     goto( `${base}/editor` )
+        // }
     }
 
-    function onDownload()
+    function onShare()
     {
-        download_playset( $playset );
+        // download_playset( $playset );
     }
 
     async function onEditImageFor( character: dv1_Character )
     {
-        const new_img_uri = await pushModal( CropImageModal, { cur_img_uri: character.img_blob ?? `${base}/logo.png` });
-        if( new_img_uri === false ) return; // User cancelled the modal
+        // const new_img_uri = await pushModal( CropImageModal, { cur_img_uri: character.img_blob ?? `${base}/logo.png` });
+        // if( new_img_uri === false ) return; // User cancelled the modal
         
-        character.img_blob = new_img_uri;
-        playset.set( $playset );
+        // character.img_blob = new_img_uri;
+        // playset.set( $playset );
     }
 
 </script>
@@ -92,23 +94,18 @@
 <div class="metadata">
     <label for='playset-image'>
         <IconSolarPenBold class="icon"/>
-        <img src={$playset.img_blob ?? `${base}/logo.png`} alt="Playset Icon" />
+        <!-- <img src={$playset.img_blob ?? `${base}/logo.png`} alt="Playset Icon" /> -->
     </label>
-    <input id='playset-image' type="file" bind:files={playset_image_file} accept="image/*" on:change={onChangePlaysetImage}/>
-    <input type="text" bind:value={$playset.title} placeholder="Playset Title" />
+    <!-- <input type="text" bind:value={$playset.title} placeholder="Playset Title" /> -->
     <button class="trash" on:click={onDelete}>
         <IconSolarTrashBin2Bold />
     </button>
-    <a href="{base}/editor" class="save">
-        <IconSolarDisketteBold />
-        <span>Save</span>
-    </a>
-    <button class="download" on:click={onDownload}>
-        <IconSolarDownloadSquareBold />
-        <span>Download</span>
+    <button class="share" on:click={onShare}>
+        <IconSolarShareBold />
+        <span>Share</span>
     </button>
 </div>
-{#if character_count < 24}
+<!-- {#if character_count < 24}
 {@const characters_needed = 24 - character_count}
 <div class="file-upload" transition:slide={{ duration: 250, axis: 'y'}}>
     <label for="character-images">
@@ -143,7 +140,7 @@
         </button>
     </li>
     {/each}
-</ul>
+</ul> -->
 
 <style lang="scss">
     @use '$scss/theme';

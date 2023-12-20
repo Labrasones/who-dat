@@ -1,14 +1,15 @@
 import type { CachedImageRef } from "./CachedImage";
+import type { Playset } from "./Playset";
 
 export interface Character {
-    /** Unique identifier for this character */
-    uuid: string;
+    /** FK Components */
+    _set_title: Playset[ 'title' ];
 
     /** Displayed name for this character */
     name: string;
-
-    /** Image data for this charachter */
-    image?: CachedImageRef;
 }
 
-export type CharacterRef = Character['uuid'];
+export type CharacterRef = [
+    name:      Character[ 'name'       ],
+    set_title: Character[ '_set_title' ]
+];

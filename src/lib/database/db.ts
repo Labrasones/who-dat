@@ -30,46 +30,36 @@ export class WhoDatDexie extends Dexie {
     private v2() {
         this.version( 2 )
         .stores({
-            sets:          '&title',
-            characters:    '&uuid',
-            images:        '&uuid'
+            sets:          'title',
+            characters:    '[name+_set_title]',
+            images:        '[_char_name+_set_title]'
         })
         .upgrade( tx => {
             tx.table<dv1_Playset>( 'playsets' ).each( dv1_set => {
                 try {
-                    if( dv1_set.title === undefined )
-                    {
-                        console.warn( `Dropping set with undefined title! Such records are invalid under schema V2` );
-                        return;
-                    }
-
                     const set: Playset = {
-                        title:         dv1_set.title,
-                        character_ids: []
+                        title:         dv1_set.title ?? 'Unnamed Set'
                     };
 
                     for( const dv1_char of dv1_set.characters ) {
-                        const uuid = crypto.randomUUID();
                         const char: Character = {
-                            uuid,
-                            name: dv1_char.name ?? "Unnamed Character"
+                            _set_title: set.title,
+                            name:       dv1_char.name ?? "Unnamed Character"
                         }
 
                         if( dv1_char.img_blob !== undefined )
                         {
                             const blob                      = dataUriToBlob( dv1_char.img_blob );
-                            const img_uuid: CachedImageRef  = crypto.randomUUID();
                             const cached_image: CachedImage = {
-                                uuid:     img_uuid,
-                                original: blob,
-                                data_url: dv1_char.img_blob
+                                _set_title: set.title,
+                                _char_name: char.name,
+                                original:   blob,
+                                data_url:   dv1_char.img_blob
                             }
-                            this.images.add( cached_image, img_uuid );
-                            char.image = img_uuid;
+                            this.images.add( cached_image );
                         }
 
-                        this.characters.add( char, uuid );
-                        set.character_ids.push( uuid );
+                        this.characters.add( char );
                     }
 
                     this.sets.add( set );

@@ -38,7 +38,7 @@
             <span>New Playset</span>
         </button>
         {#each $playsets ?? [] as playset, idx}
-            {@const character_count = playset.character_ids?.length ?? 0}
+            {@const character_count = playset.character_refs?.length ?? 0}
             <a href="{base}/editor/{playset.title}" transition:fly={{ duration: 1000, y: 50, easing: backOut }}>
                 {#if character_count < 24}
                     <span class="warning">

@@ -1,22 +1,31 @@
 <script lang="ts">
     import { onDestroy, onMount } from "svelte";
     import { liveQuery } from "dexie";
-    import { db, type Playset } from "$lib/db";
+    import { db } from "$lib/database/db";
     import { backOut } from "svelte/easing";
     import { fly } from "svelte/transition";
     import { goto } from "$app/navigation";
     import { base } from "$app/paths";
     import { popTitle, pushTitle } from "./+layout.svelte";
+    import type { Playset } from "$lib/database/objects/Playset";
+    import { writable } from "svelte/store";
 
     // Internal
     let search_str: string;
-    $: playsets = liveQuery(async () => {
-        console.log( `Search with str: `, search_str );
-        if ( !search_str ) return await db.playsets.toArray();
-        else return await db.playsets.filter( p => {
-            if( !p.title ) return false;
-            return p.title.toLowerCase().includes( search_str.toLowerCase() );
-        }).toArray();
+    // $: playsets = liveQuery(async () => {
+    //     console.log( `Search with str: `, search_str );
+    //     if ( !search_str ) return await db.playsets.toArray();
+    //     else return await db.playsets.filter( p => {
+    //         if( !p.title ) return false;
+    //         return p.title.toLowerCase().includes( search_str.toLowerCase() );
+    //     }).toArray();
+    // })
+    $: playsets = liveQuery( () => {
+        return db.playsets?.toArray() ?? [];
+    })
+    $: characters = liveQuery( () => {
+      playsetsnsole.log( db.characters );
+        return db.characters?.toArray() ?? [];
     })
 
     // Lifecycle
@@ -38,20 +47,20 @@
 <article>
     <header>Select a Playset</header>
     <nav>
-        <input type='text' placeholder="search" bind:value={search_str} />
+        <input type='text' placeholder="search"playsetsd:value={search_str} />
         <IconSolarMagniferLinear />
     </nav>
     <section>
         {#each $playsets ?? [] as playset, idx}
-            {@const character_count = playset.characters?.length ?? 0}
-            <a href="{base}/game/{playset.id}" transition:fly={{ duration: 1000, y: 50, easing: backOut }}>
+            {@const character_count = playset.character_ids?.length ?? 0}
+            <a href="{base}/game/{playset.title}" transition:fly={{ duration: 1000, y: 50, easing: backOut }}>
                 {#if character_count < 24}
                     <span class="warning">
                         <IconSolarShieldWarningBold />
                         <small>{character_count}/24 chacacter{character_count !== 1 ? "s" : ""}!</small>
                     </span>
                 {/if}
-                <img src={playset.img_blob ?? `${base}/logo.png`} alt="Playset icon" />
+                <img src={playset.icon ?? `${base}/logo.png`} alt="Playset icon" />
                 <span>{playset.title}</span>
             </a>
         {/each}

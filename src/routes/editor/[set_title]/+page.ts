@@ -1,24 +1,26 @@
-import { type Playset, db } from "$lib/db";
+import { db } from "$lib/database/db";
 import { redirect } from "@sveltejs/kit";
 import type { PageLoad } from "./$types";
 import { liveQuery } from "dexie";
 import { WrappedQuery } from "$lib/queryHelper";
+import type { Playset } from "$lib/database/objects/Playset";
 
 export const load: PageLoad = async ({ params }) => {
-    const playset_id: number = parseInt( params.id ); // Game ID is stored as a number in Dexie, but page params are strings so cast it
+    const set_uuid: number = parseInt( params.set_title );
     
-    if( await db.playsets.get( playset_id ) === undefined ) {
+    if( await db.sets.get( set_uuid ) === undefined ) {
         throw redirect( 302, '/' ); // Playset not in database, redirect to homepage
     }
     return {
         playset: new WrappedQuery<Playset>(
-            db.playsets,
+            db.sets,
             async () => {
-                return await db.playsets.get( playset_id );
+                return await db.sets.get( set_uuid );
             },
             {
                 characters: []
             }
-        )
+        ),
+        set_uuid
     }
 }

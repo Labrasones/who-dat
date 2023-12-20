@@ -2,15 +2,16 @@
     import { onDestroy, onMount } from "svelte";
     import { popTitle, pushTitle } from "../+layout.svelte";
     import { liveQuery } from "dexie";
-    import { db, type Playset } from "$lib/db";
+    import { db } from "$lib/database/db";
     import { backOut } from "svelte/easing";
     import { fly } from "svelte/transition";
     import { goto } from "$app/navigation";
     import { base } from "$app/paths";
+    import type { Playset } from "$lib/database/objects/Playset";
 
     // Internal
     let playsets = liveQuery(async () => {
-        return await db.playsets.toArray();
+        return await db.sets.toArray();
     })
 
     // Lifecycle
@@ -24,28 +25,28 @@
     // Event Handlers
     async function onAddPlayset()
     {
-        const idx = await db.playsets.add({} as Playset);
+        const idx = await db.set.add({} as Playset);
         goto( `${base}/editor/${idx}` );
     }
 </script>
 
 <article>
-    <header>Select a Playset</header>
+    <header>Select a Playset<playsetsder>
     <section>
         <button on:click={onAddPlayset}>
             <IconSolarAddSquareLinear />
             <span>New Playset</span>
         </button>
         {#each $playsets ?? [] as playset, idx}
-            {@const character_count = playset.characters?.length ?? 0}
-            <a href="{base}/editor/{playset.id}" transition:fly={{ duration: 1000, y: 50, easing: backOut }}>
+            {@const character_count = playset.character_ids?.length ?? 0}
+            <a href="{base}/editor/{playset.title}" transition:fly={{ duration: 1000, y: 50, easing: backOut }}>
                 {#if character_count < 24}
                     <span class="warning">
                         <IconSolarShieldWarningBold />
                         <small>{character_count}/24 chacacter{character_count !== 1 ? "s" : ""}!</small>
                     </span>
                 {/if}
-                <img src={playset.img_blob ?? `${base}/logo.png`} alt="Playset icon" />
+                <img src={playset ?? `${base}/logo.png`} alt="Playset icon" />
                 <span>{playset.title}</span>
             </a>
         {/each}

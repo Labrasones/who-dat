@@ -23,12 +23,13 @@
     import { onMount } from "svelte";
     import { backOut, elasticOut } from "svelte/easing";
     import { fade, fly } from "svelte/transition";
-    import { db, type Playset } from '$lib/db';
+    import { db } from '$lib/database/db';
     import { goto } from '$app/navigation';
     import { writable, type Writable } from 'svelte/store';
     import Modal, { pushModal } from './components/modal/Modal.svelte';
     import TimedModal from './components/modal/TimedModal.svelte';
     import { base } from '$app/paths';
+    import type { Playset } from '$lib/database/objects/Playset';
 
     const splash_time: number  = 3000;
     let show_splash: boolean = false;
@@ -56,8 +57,8 @@
             }
             reader.readAsText( import_files[0] );
         });
-        db.playsets.add( playset );
-        pushModal( TimedModal, { message: `Imported ${playset.title}!` } );
+        db.sets.add( playset );
+        pushModal( TimedModal, { message: `Imported ${playset.title}!` } )
     }
 </script>
 

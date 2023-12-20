@@ -1,5 +1,5 @@
 <script lang='ts'>
-    import { db, type Character, type Playset, pushRecentPlayset } from "$lib/db";
+    import { db } from "$lib/database/db";
     import { liveQuery } from "dexie";
     import { writable, type Writable } from "svelte/store";
     import type { PageData } from "./$types";
@@ -12,19 +12,13 @@
     import YesNoModal from "../../components/modal/YesNoModal.svelte";
     import { base } from "$app/paths";
     import CropImageModal from "../../components/modal/CropImageModal.svelte";
+    import type { dv1_Character } from "$lib/database/deprecated_objects/1/dv1_Playset";
 
     export let data: PageData;
     $: playset    = data.playset;
-    $: playset_id = $playset.id;
-    $: {
-        if ( playset_id !== undefined )
-        {
-            pushRecentPlayset( playset_id );
-        }
-    }
 
     // Dynamic
-    $: character_count = $playset.characters?.length ?? 0;
+    $: character_count = $playset.character_ids?.length ?? 0;
 
     // Internal
     let playset_image_file:    FileList;
@@ -74,7 +68,7 @@
         const result = await pushModal( YesNoModal, { title: `Delete "${$playset.title}"?`, message: `Are you sure you want to delete the "${$playset.title}" playset?` } );
         if( result )
         {
-            db.playsets.delete( $playset.id );
+            db.sets.delete( $playset.title );
             goto( `${base}/editor` )
         }
     }
@@ -84,7 +78,7 @@
         download_playset( $playset );
     }
 
-    async function onEditImageFor( character: Character )
+    async function onEditImageFor( character: dv1_Character )
     {
         const new_img_uri = await pushModal( CropImageModal, { cur_img_uri: character.img_blob ?? `${base}/logo.png` });
         if( new_img_uri === false ) return; // User cancelled the modal

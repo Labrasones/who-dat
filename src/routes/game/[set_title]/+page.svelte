@@ -1,5 +1,5 @@
 <script lang='ts'>
-    import { db, type Character, type Playset, pushRecentPlayset } from "$lib/db";
+    import { db, type Character, type Playset, pushRecentPlayset } from "$lib/database/db";
     import { liveQuery } from "dexie";
     import { writable } from "svelte/store";
     import type { PageData } from "./$types";
@@ -15,7 +15,7 @@
     $: {
         if ( playset_id !== undefined )
         {
-            pushRecentPlayset( playset_id );
+            pushRecentPlayset( playplaysetsid );
         }
     }
     $: {
